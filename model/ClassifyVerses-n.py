@@ -1,21 +1,16 @@
 import tensorflow as tf
-from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow import keras
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 import os
 import json
-from embedding import Embedding
 
-#Embedding = Embedding()
-
-# Generate synthetic vector embeddings (100 samples, 100 dimensions each)
-#np.random.seed(42)
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 datafile = f"{ROOT_DIR}/data/kjv-trainingData.csv"
-modelfile = f"{ROOT_DIR}/data/svm_classifier.pkl"
+modelfile = f"{ROOT_DIR}/data/nm_classifier.h5"
 
 X = []
 y = []
@@ -48,14 +43,14 @@ X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
 
-# Define a simple feedforward neural network
+# Define a neural network
 model = keras.Sequential([
     layers.Input(shape=(1536,)),  # Input layer (1536-dimensional vectors)
     layers.Dense(512, activation="relu"),  # Hidden layer 1
-    layers.Dropout(0.6),
+    layers.Dropout(0.3), # aovid overfitting
     layers.Dense(128, activation="relu"),  # Hidden layer 1
     layers.Dense(64, activation="relu"),  # Hidden layer 1
-    layers.Dropout(0.3),
+    layers.Dropout(0.3), # aovid overfitting
     layers.Dense(21, activation="softmax")  # Output layer (10 classes)
 ])
 
@@ -69,3 +64,5 @@ model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=20, batch_s
 test_loss, test_acc = model.evaluate(X_test, y_test)
 print(f"✅ Test Accuracy: {test_acc * 100:.2f}%")
 
+model.save(modelfile,include_optimizer=True)
+print(f"✅ Model saved to {modelfile}")
