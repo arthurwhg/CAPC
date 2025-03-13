@@ -1,0 +1,73 @@
+{
+    "id": 1,
+    "answers": [
+        {
+            "id": 3,
+            "question": 1,
+            "content": {
+                "time": "公元前1446年",
+                "place": "埃及",
+                "verse": "出埃及记 12:31-32",
+                "description": "法老在夜间召摩西和亚伦，命令他们带领以色列人离开埃及。"
+            },
+            "date": "27/01/2025",
+            "rating": 0,
+            "user": null,
+            "comments": [
+                {
+                    "id": 1,
+                    "answer": 3,
+                    "question": null,
+                    "content": "this is a manual putin content",
+                    "date": null,
+                    "by": "arthur",
+                    "children": [
+                        {
+                            "id": 2,
+                            "content": "this is child comment of comment 1",
+                            "date": null,
+                            "by": "arthur",
+                            "children": [],
+                            "rating": 0
+                        }
+                    ],
+                    "rating": 1
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "question": 1,
+            "content": {
+                "time": "公元前1446年",
+                "place": "红海",
+                "verse": "出埃及记 14:21-22",
+                "description": "摩西伸手向海，耶和华使海水分开，以色列人走干地过海。"
+            },
+            "date": "27/01/2025",
+            "rating": 0,
+            "user": null,
+            "comments": []
+        },
+        {
+            "id": 5,
+            "question": 1,
+            "content": {
+                "time": "公元前1446年",
+                "place": "西奈山",
+                "verse": "出埃及记 19:1-2",
+                "description": "以色列人在西奈山扎营，摩西上山与神相遇。"
+            },
+            "date": "27/01/2025",
+            "rating": 0,
+            "user": null,
+            "comments": []
+        }
+    ],
+    "date": "27/01/2025",
+    "title": "Steps of Exodus",
+    "description": "",
+    "language": "ZH",
+    "bible": "sigao",
+    "rating": 5
+}
