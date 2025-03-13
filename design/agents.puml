@@ -1,0 +1,49 @@
+@startuml
+
+class OpenAIChatAgent {
+  - API_key
+  - Model 
+  - Err
+  - json_structure
+  - Language
+  - Chat 
+  + init(apikey,model,sy_prompt)
+  + setRole()
+  + setJsonBlob()
+  + ask()
+  + err()
+  + getAnswer()
+  + setQuestion()
+  + setLanguage()
+}
+
+class FewShotsChatAgent {
+  - examples
+  + ask()
+  + setExamples()
+  + getAnswer()
+}
+
+class Pastor {
+  - Question
+  - History
+  + ask()
+}
+
+class Preist {
+  - Question
+  - History
+  + ask()
+}
+
+class Assistant {
+  - Sample 
+  + getSuggestion()
+}
+
+OpenAIChatAgent <|-- Pastor
+OpenAIChatAgent <|-- Preist
+OpenAIChatAgent <|- FewShotsChatAgent
+FewShotsChatAgent <|-- Assistant
+
+@enduml

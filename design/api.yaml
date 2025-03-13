@@ -1,0 +1,353 @@
+swagger: "2.0"
+info:
+  title: LLM service APIs
+  description: APIs for LLM services.
+  version: 0.0.1
+host: localhost:8000 # Add host for Swagger UI
+basePath: /llm/api/v1
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /questions:
+    get:
+      tags:
+        - Question
+      summary: Get all questions
+      responses:
+        '200':
+          description: Successful response with questions.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Question"
+        '404':
+          description: No question found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo" 
+  /question/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+        description: The question ID
+    get:
+      tags:
+        - Question
+      summary: get a question detail by ID
+      responses:
+        '200':
+          description: Successful response with question.
+          schema:
+            $ref: "#/definitions/Question"
+        '404':
+          description: No question found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+    post:
+      tags:
+        - Question
+      summary: Create a new question
+      parameters:
+        - in: body
+          name: question
+          required: true
+          schema:
+            $ref: "#/definitions/Question"
+      responses:
+        '201':
+          description: Successful created a question.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Answer"
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+    put:
+      tags:
+        - Question
+      summary: Update a question
+      parameters:
+        - in: body
+          name: question
+          required: true
+          schema:
+            $ref: "#/definitions/Question"
+      responses:
+        '200':
+          description: Successful updated a question.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Question"
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo" 
+    delete: 
+      tags:
+        - Question
+      summary: Delete a question
+      responses:
+        '200':
+          description: Successful deleted a question.
+        '404':
+          description: No question found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+  /question/{id}/answers:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+        description: The question ID  
+    get:
+      tags:
+        - Question
+      summary: Get all answers of a question
+      responses:
+        '200':
+          description: Successful response with all answers.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Answer"
+        '404': 
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"       
+        '500':  
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+    post:
+      tags:
+        - Question
+      summary: Add new answers
+      parameters:
+        - in: body
+          name: answer
+          required: true
+          schema:
+            $ref: "#/definitions/Answer"
+      responses:
+        '201':
+          description: Successful created an answer.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Answer"
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo" 
+    put:
+      tags:
+        - Question
+      summary: Update all answers
+      parameters:
+        - in: body
+          name: answer
+          required: true
+          schema:
+            $ref: "#/definitions/Answer"
+      responses:
+        '200':
+          description: Successful updated an answer.
+          schema:
+            $ref: "#/definitions/Answer"
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo" 
+        '500':  
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+  /answer/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        type: string
+        description: The answer ID
+    get:
+      tags:
+        - Question
+      summary: Get an answer by ID  
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The answer ID  
+      responses:
+        '200':
+          description: Successful response with an answer.
+          schema:
+            $ref: "#/definitions/Answer"
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+    put:
+      tags:
+        - Question
+      summary: Update a new answer
+      parameters:
+        - in: body
+          name: answer
+          required: true
+          schema:
+            $ref: "#/definitions/Answer"
+      responses:   
+        '200':
+          description: Successful updated an answer.
+          schema:
+            $ref: "#/definitions/Answer"
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: "#/definitions/ErrorInfo"
+    delete:
+      tags:
+        - Question
+      summary: Delete an answer   
+      responses:
+        '200':
+          description: Successful deleted an answer.  
+        '404':
+          description: No answer found.
+          schema:
+            $ref: "#/definitions/ErrorInfo" 
+  /ask:
+    post:
+      tags:
+        - Question
+    summary: Ask a question
+    parameters:
+      - in: body
+        name: question
+        required: true
+        schema:
+          $ref: "#/definitions/Question"  
+    responses:
+      '201':
+        description: Successful created a question.
+        schema:
+          type: array
+          items:
+            $ref: "#/definitions/Answer"
+      '404':
+        description: No answer found.
+        schema:
+          $ref: "#/definitions/ErrorInfo"
+      '500':
+        description: Internal Server Error
+        schema:
+          $ref: "#/definitions/ErrorInfo"
+  /about:
+    get:
+      tags:
+        - About
+      summary: About the LLM service
+      parameters:
+        - in: query
+          name: version
+          description: Version of the LLM service
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Returns the version of the LLM service.
+          schema:
+            type: object
+            properties:
+              version:
+                type: string
+definitions:
+  Question:
+    type: object
+    properties:
+      question:
+        type: string
+        description: The question to ask.
+      bible:
+        type: string
+        description: The bible version to be referenced.
+      language:
+        type: string
+        description: The language ofthe answer requested
+      date:
+        type: string
+        format: date
+        description: The date the question created.
+      state:
+        type: string
+        schema:
+          enum:
+            - saved
+            - published
+        description: The state of the question.
+      user:
+        type: string
+        description: The user who asked/updated the question
+      answers:
+        type: array
+        items:
+          $ref: "#/definitions/Answer"
+  Answer:
+    type: object
+    properties:
+      additionalProperties:
+          type: object  #any type of object
+  ErrorInfo:
+    type: object
+    required:
+      - code
+    properties:
+      code:
+        type: string
+        description: The error code.
+      detail:
+        type: string
+        description: The detailed error information.

@@ -1,0 +1,52 @@
+@startuml
+
+
+class commonQuestions {
+   -id: pk int
+   -title: string
+   -description: string
+   -language: string
+   -bible: string                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+   -date: datetime
+   -answers: answer[]
+   -rate: int
+   +getAnswers(): answer[]
+   +addAnswer(): answer
+   +removeAnswer(): answer
+   +updateAnswer(): answer
+   +UpdateQuestion(): commonQuestions
+   +DeleteQuestion(): commonQuestions  
+}
+
+class answer {
+   -id: pk int
+   -question_id: fk int
+   -content: string
+   -date: datetime
+   -commentn: int
+   -comments:
+   +getComments(): comment[]
+   +addComment(): comment
+   +removeComment(): comment
+   +updateComment(): comment
+   +UpdateAnswer(): answer
+}
+
+class comment {
+   -id: pk int
+   -answer_id: fk int
+   -content: string
+   -date: datetime                                                                                                                                                                                                                                                                                                                                                                                               
+   -by: string
+   -comments: comment   
+   +getComments(): comment[]
+   +updateComment(): comment
+   +deleteComment(): comment                                                                                                                                                                                                                                                                                                                                                                                                             
+}
+
+commonQuestions "1" -- "0..*" answer
+answer "1" -- "0..*" comment
+comment "1" -- "0..*" comment
+
+@enduml
+

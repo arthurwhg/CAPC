@@ -1,0 +1,30 @@
+@startuml
+
+package "browser" {}
+
+package "app" {}
+
+package "web server" {
+    rectangle "nginx" {}
+
+    rectangle "App " {
+        rectangle "app" {}
+    }                                                                                                                                                                                                                                                                                                                                                                                                          
+}
+
+browser -- nginx
+app -- nginx
+
+package "API service" {
+    rectangle "LLM service" as llm {}
+    rectangle "Vector storage" as vs {}
+    rectangle "media storage" as ms {}
+}
+
+rectangle "GPT" {
+    rectangle "GPT-4o" {}                                                                                                                                                                                                                                                                                                                                                                                                           
+}
+
+
+@enduml
+
