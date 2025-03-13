@@ -45,6 +45,7 @@ f.close()
 
 # Convert to numpy arrays
 X = np.array(X)
+X = embedding.ReduceDim("AutoEncoder",X,768)
 y = np.array(y)
 print(f"X shape: {X.shape}")
 print(f"y shape: {y.shape}")
