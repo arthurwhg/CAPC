@@ -1,0 +1,27 @@
+
+services:
+  vectorDB:
+    image: pgvector/pgvector:0.8.0-pg17
+    container_name: pgcector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: vector
+      POSTGRES_PASSWORD: vector
+      POSTGRES_DB: bible
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  pgadmin:  
+    image: elestio/pgadmin
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: arthur@m4christ.net
+      PGADMIN_DEFAULT_PASSWORD: 123456
+      PGADMIN_Listen_Port: 5050
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    depends_on:
+      - vectorDB
