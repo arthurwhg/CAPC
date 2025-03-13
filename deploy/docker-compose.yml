@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: vector
       POSTGRES_DB: bible
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ../db/data:/var/lib/postgresql/data
 
   pgadmin:  
     image: elestio/pgadmin
@@ -22,6 +22,6 @@ services:
     ports:
       - "5050:5050"
     volumes:
-      - ./pgadmin:/var/lib/pgadmin
+      - ../db/pgadmin:/var/lib/pgadmin
     depends_on:
       - vectorDB
