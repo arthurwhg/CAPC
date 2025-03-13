@@ -1,12 +1,15 @@
 import unittest
 from unittest.mock import patch
 from agents.base import OpenAIChatAgent
+import os
+from dotenv import load_dotenv
 
 class TestOpenAIChatAgent(unittest.TestCase):
 
     def setUp(self):
         # Set up a mock OpenAI API key and model for testing
-        self.api_key = "mock_api_key"  # Replace with a dummy key if needed
+        load_dotenv(".env.production")
+        self.api_key = os.getenv("openai_API_Key")  # Replace with a dummy key if needed
         self.llm_model = "gpt-3.5-turbo"
         self.system_prompt = "You are a helpful assistant."
         self.agent = OpenAIChatAgent(apiKey=self.api_key, llmModel=self.llm_model, system_prompt=self.system_prompt)

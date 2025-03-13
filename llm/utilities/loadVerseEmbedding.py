@@ -1,3 +1,9 @@
+###
+# This utility read verse embeddings from a JSONL file and update into database.
+#
+# version 1.0
+#
+###
 import json
 import os, sys
 import django

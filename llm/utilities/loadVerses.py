@@ -1,3 +1,9 @@
+###
+# This utility read verses from JSONL file (withou embeddings) and save bible versers into database.
+#
+# version 1.0
+#
+###
 import pandas as pd
 import json
 import os, sys

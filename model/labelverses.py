@@ -1,3 +1,9 @@
+###
+# This utility create and traing a SVM for verses category and save the model to "data/svm_classifier.pkl".
+#
+# version 1.0
+#
+###
 import numpy as np
 import pandas as pd
 from sklearn.svm import NuSVC, SVC
@@ -133,18 +139,18 @@ def predict(model,X):
    y = model.predict(X)
    return y
 
-manual_search()
+#manual_search()
 
 ### main process
-# model = train_model(X_train, y_train)
-# accuracy, mse = test_model(model, X_test, y_test)
-# print(f"Accuracy: {accuracy * 100:.2f}%, MSE: {mse:.2f}")
-# saved = save_model(model, modelfile )
-# if saved: print(f"the model is saved to {modelfile}")
-# print(f"load model to test")
-# loaded_model = load_model(modelfile)
-# accuracy2, mse2 = test_model(loaded_model, X_test, y_test)
-# print(f"Accuracy: {accuracy2 * 100:.2f}%, MSE: {mse2:.2f}")
+model = train_model(X_train, y_train)
+accuracy, mse = test_model(model, X_test, y_test)
+print(f"Accuracy: {accuracy * 100:.2f}%, MSE: {mse:.2f}")
+saved = save_model(model, modelfile )
+if saved: print(f"the model is saved to {modelfile}")
+print(f"load model to test")
+loaded_model = load_model(modelfile)
+accuracy2, mse2 = test_model(loaded_model, X_test, y_test)
+print(f"Accuracy: {accuracy2 * 100:.2f}%, MSE: {mse2:.2f}")
 
 # rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 # rf_model.fit(X_train, y_train)

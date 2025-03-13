@@ -1,11 +1,17 @@
 import unittest
 from pastor import Pastor
 import json
+import os
+from dotenv import load_dotenv
 
 class TestPastor(unittest.TestCase):
-    api_key = "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"
-    model = "gpt-4o-mini"
-    pastor = Pastor(api_key, model,)
+
+    def setUp(self):
+        super().setUp()
+        load_dotenv(".env.production")
+        self.api_key = os.getenv("openai_API_Key")  # Replace with a dummy key if needed
+        self.model = "gpt-4o-mini"
+        selfpastor = Pastor(self.api_key, self.model)
 
     #@patch('agents.base.ChatOpenAI')
     def test_init(self):

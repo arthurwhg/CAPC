@@ -1,3 +1,9 @@
+###
+# This utility read verses and labels from a CSV file and export to a data file used by model training.
+#
+# version 1.0
+#
+###
 import pandas as pd
 import json
 import os, sys

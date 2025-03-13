@@ -4,28 +4,34 @@ from assistant import Assistant
 from langchain.prompts import PromptTemplate
 import json
 import pprint
+import os
+from dotenv import load_dotenv
+
 
 class TestAssistant(unittest.TestCase):
-  api_key = "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"
-  model = "gpt-4o-mini"
-  examples=[
-      {"input":"list allkings in Isreal", 
-      "output_jsonblob": json.dumps(
-         {"king": "國王的名字，例如David","duration": "在位時長","book": "聖經書卷的名字，例如 \'耶肋米亞書\'","verse": "相關的聖經章節，例如 \'29:11\'","activity": "主要作為","end": "結局,若沒有答案，請回答未記錄"},
-         ensure_ascii=False, indent=4)
-      },
-      {"input":"請列出以色列人離開埃及直到進入嘉南美地主要事件，發生地和大約時間，", 
-       "output_jsonblob": json.dumps({
-              "event": "事件",
-              "place": "發生地",
-              "time": "相對於出埃及的時間",
-              "book": "聖經書卷的名字",
-              "verse": "章節", 
-              "scripture": "聖經章節",
-              "activity": "主要事件",
-            },ensure_ascii=False, indent=4)
-      }
-    ]
+
+  def setUp(self):
+    load_dotenv(".env.production")
+    self.api_key = os.getenv("openai_API_Key")  # Replace with a dummy key if needed
+    self.model = "gpt-4o-mini"
+    self.examples=[
+        {"input":"list allkings in Isreal", 
+        "output_jsonblob": json.dumps(
+          {"king": "國王的名字，例如David","duration": "在位時長","book": "聖經書卷的名字，例如 \'耶肋米亞書\'","verse": "相關的聖經章節，例如 \'29:11\'","activity": "主要作為","end": "結局,若沒有答案，請回答未記錄"},
+          ensure_ascii=False, indent=4)
+        },
+        {"input":"請列出以色列人離開埃及直到進入嘉南美地主要事件，發生地和大約時間，", 
+        "output_jsonblob": json.dumps({
+                "event": "事件",
+                "place": "發生地",
+                "time": "相對於出埃及的時間",
+                "book": "聖經書卷的名字",
+                "verse": "章節", 
+                "scripture": "聖經章節",
+                "activity": "主要事件",
+              },ensure_ascii=False, indent=4)
+        }
+      ]
 
   # for ex in examples:
   #   print(f"Question: {ex['input']}")
@@ -33,17 +39,18 @@ class TestAssistant(unittest.TestCase):
   #   print(ex["output_jsonblob"])
   #   print("=" * 50)
 
-  examples_template=PromptTemplate(
-      input_variables=["input", "output_jsonblob"],
-      template="User: {input}\nsuggested Json blob:\n{output_jsonblob}\n"
-  )
+    self.examples_template=PromptTemplate(
+        input_variables=["input", "output_jsonblob"],
+        template="User: {input}\nsuggested Json blob:\n{output_jsonblob}\n"
+    )
 
-  role = """"You are given some samples by input questons and output in Json blob of answers to the question.
+    self.role = """"
+    You are given some samples by input questons and output in Json blob of answers to the question.
   You are asked by a new question, please suggest your best Json blob for the response. 
   You do not need to answer the question. You just need provide 1 sample based on the Json blob you suggested
   """
-  
-  assistant = Assistant(apiKey=api_key, model=model, role=role, examples=examples, examples_template=examples_template)
+    self.assistant = Assistant(apiKey=self.api_key, model=self.model, role=self.role, examples=self.examples, examples_template=self.examples_template)
+
 
   def test_getAssistant(self):
     #self.assistant.getAssistant("how to pray for me to seek a new job")
