@@ -1,0 +1,1 @@
+SELECT setval(pg_get_serial_sequence('llm_commonquestions', 'id'), MAX(id)) FROM llm_commonquestions;
