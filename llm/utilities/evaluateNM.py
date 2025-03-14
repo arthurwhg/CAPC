@@ -17,7 +17,7 @@ with open(datafile, "r", encoding="utf-8") as f:
     line = line.strip()
     if line:
       rec = json.loads(line)
-      print(f"shape of embedding: {len(rec['embedding'])}")
+      #print(f"shape of embedding: {len(rec['embedding'])}")
       # recude X dimention to 256
       emb = rec['embedding']
       X.append(emb)

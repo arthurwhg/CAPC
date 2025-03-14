@@ -1,3 +1,10 @@
+###
+# This utility create neral network model and save the model, which model is used to label all other verses. 
+# the model is saved in file /data/nm_classifier.h5 by default
+#
+# version v1.0
+#
+###
 import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow import keras
