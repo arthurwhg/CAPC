@@ -16,6 +16,7 @@ class Verse(models.Model):
     verse = models.CharField(max_length=1024, null=True, blank=True)
     cid = models.CharField(max_length=255, null=True, blank=False)
     topic = models.CharField(max_length=255, null=True)
+    labeled = models.CharField(max_length=16, null=True, blank=True)
     semantic = models.CharField(null=True, blank=True)
     tokens = models.IntegerField(null=True, blank=True)
     embedding = VectorField(dimensions=1536, null=True, blank=True)
@@ -51,3 +52,7 @@ class Verse(models.Model):
           validated_data['embedding'] = self.get_embedding(validated_data['verse'])
         return super().create(validated_data)
 
+
+    def getVerseswithoutTopic(self):
+        return Verse.objects.filter(topic__isnull=True).all()
+    
