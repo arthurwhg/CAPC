@@ -1,0 +1,60 @@
+@startuml class
+
+class BatchTask {
+  - id:
+  + uploadTaskFile()
+  + initiateTask()
+  + checkTaskStatus()
+  + downloadOutputFile()
+}
+
+class AudioTask {
+  + makeCunks()
+  + transcribe() 
+}
+
+class CreateBatchTaskFile {
+
+}
+
+class CreateEmbeddingTaskFile {
+
+}
+class CreateChatCompletionTaskFile{
+
+}
+class ValidateBatchTaskFile {
+
+}
+class ValidateEmbeddingTaskFile{
+
+}
+class ValidateChatCompletionTaskFile {
+
+}
+
+class ValidateOutputFile {
+
+}
+class ValidateEmbeddingOutputFile {
+
+}
+class ValidateChatCompletionOutputFile {
+
+}
+
+BatchTask <|- AudioTask
+BatchTask *-- CreateBatchTaskFile
+BatchTask *--- ValidateBatchTaskFile
+BatchTask *-- ValidateOutputFile
+
+CreateBatchTaskFile <|-- CreateEmbeddingTaskFile
+CreateBatchTaskFile <|-- CreateChatCompletionTaskFile
+
+ValidateBatchTaskFile <|-- ValidateEmbeddingTaskFile
+ValidateBatchTaskFile <|-- ValidateChatCompletionTaskFile
+
+ValidateOutputFile <|-- ValidateEmbeddingOutputFile
+ValidateOutputFile <|-- ValidateChatCompletionOutputFile
+
+@enduml

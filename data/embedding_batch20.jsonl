@@ -1,2 +1,0 @@
-{"method": "POST","url":"/v1/embeddings","body":{"input":"In the beginning God created the heaven and the earth.","model":"text-embedding-ada-002","encoding_format": "float"},"custom_id":"kjv-0"}
-{"method": "POST","url":"/v1/embeddings","body":{"input":"And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters.","model":"text-embedding-ada-002","encoding_format": "float"},"custom_id":"kjv-1"}
