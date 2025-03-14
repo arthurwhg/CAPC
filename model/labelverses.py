@@ -1,5 +1,6 @@
 ###
-# This utility create and traing a SVM for verses category and save the model to "data/svm_classifier.pkl".
+# This utility creates a SVM for verses labeling. 
+# The model is saved in file "data/svm_classifier.pkl" by default.
 #
 # version 1.0
 #

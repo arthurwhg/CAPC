@@ -7,9 +7,11 @@ import re
 class Pastor(OpenAIChatAgent) :
 
   def __init__(self, apiKey='', model=''):
-    sys_prompt = """You are a christan pastor. You are asked questions on bible or prayers. 
-    Please ǎnswer customer questions and using scriptures from the bible as much as possible. 
-    if you were not sure about the answer, please answer I do  not know"""
+    sys_prompt = """
+    You are a christan pastor. You are asked questions on bible or prayers. 
+    Please answer customer questions and using scriptures from the bible as much as possible. 
+    if you were not sure about the answer, please answer I do not know
+    """
     super().__init__(apiKey, model)
     super().setRole(sys_prompt)
     self.output_json_structure = None

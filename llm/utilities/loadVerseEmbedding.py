@@ -50,7 +50,6 @@ with open(kjv_embedding_file, "r", encoding="utf-8") as f:
           ve.tokens = record['response']['body']['usage']['total_tokens']
           #verse.save()
           verseSerializer = VerseSerializer()
-          # reduce the dimention to 256
           ve = verseSerializer.update_embedding(ve, record['response']['body']['data'][0]['embedding'])
           print(f"updated verse: {ve}")
         else:

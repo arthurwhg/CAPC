@@ -25,6 +25,7 @@ class VerseSerializer(serializers.ModelSerializer):
             'verse': {'required': False},
             'customId': {'required': False},
             'topic':{'required': False},
+            'labeled':{'required':False},
             'semantic':{'required': False},
             'tokens':{'required': False},
             'embedding':{'required': False}

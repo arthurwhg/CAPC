@@ -1,5 +1,6 @@
 ###
-# This utility read verses and labels from a CSV file and export to a data file used by model training.
+# This utility read verses and topic from a CSV file and export to a data file used by model training.
+# This utility also updat the labed topic data into database !! need to uncomment couplf of lines of code
 #
 # version 1.0
 #
@@ -42,12 +43,13 @@ def RemoveEmbeddingAttribute(verse, verseLabeled):
     new_verse["book_number"] = verse.book_number
     new_verse["chapter_number"] = verse.chapter_number
     new_verse["verse_number"] = verse.verse_number
-    new_verse["topic"] = verseLabeled['topic_number']
+    new_verse["topic"] = int(verseLabeled['topic_number'])
+    new_verse['labeled'] = 'manual'
 
     return new_verse
 
-counter_by_topic = np.zeros(30)
-counter_by_books = np.zeros(70)
+counter_by_topic = np.zeros(22)
+counter_by_books = np.zeros(66)
 
 csv = pd.read_csv(f"{ROOT_DIR}/data/kjv-labeledbyTopics.csv")
 id=0
@@ -61,25 +63,25 @@ list = []
 print(f"total records: {records}")
 updated =0
 for id in range(records):
-    print(f"id {id} topic: {csv.iloc[id]['topic_number']}")
+    print(f"id {id} topic: {csv.iloc[id]['topic_number']}, type:{type(csv.iloc[id]['topic_number'])}")
+
     #print(csv.iloc[id].to_json())
     data = csv.iloc[id].to_json()
     dict = csv.iloc[id].to_dict()
     verses = Verse.objects.all()
-    if dict['topic_number'] != 'nan' and dict['topic_number'] > 0 and dict['topic_number'] is not None:
-
-
+    if not np.isnan(csv.iloc[id]['topic_number']) :
         custom_id = dict['version_abbr']+'-'+str(id)
         verse = verses.get(cid=custom_id)
         if verse is not None:
-            top = int(dict['topic_number']) -1
-            print(top)
+            top = int(dict['topic_number'])
+            #print(top)
             counter_by_topic[top]+= 1
             counter_by_books[verse.book_number]+= 1
             new_verse = RemoveEmbeddingAttribute(verse, dict)
             print("update the verse")
             verseSerializer = VerseSerializer()
-            #verseSerializer.update(verse, new_verse)
+            # update topic into database 
+            verseSerializer.update(verse, new_verse)
             updated += 1
 
             data = {}
@@ -89,7 +91,7 @@ for id in range(records):
             
             list.append(data)
     else:
-        print("ignore the verse")
+        print(f"got nan topic {id}: ignore the verse")
 
 with open( trainingdataFile,"w", encoding="utf-8") as f:
     for rec in list:

@@ -2,11 +2,18 @@ import openai
 import os
 import requests
 import time
+from dotenv import load_dotenv
 
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 
-embadding_batch_file = "./data/embedding_batch.jsonl"
-openai.api_key = "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"
-
+batch_file = f"{ROOT_DIR}/data/tasks/task_correction.jsonl"
+envfile = f"{ROOT_DIR}/.env.production"
+print(f".env file: {envfile}")
+if not load_dotenv(envfile,verbose=True):
+   print("error to load .env.production file")
+   exit(1)
+else:
+  openai.api_key = os.getenv("OPENAI_API_KEY")  # Replace with a dummy key if needed
 
 def get_status_detail(batch_id):
        while True:
@@ -53,7 +60,7 @@ def check_batch_status(batch_id):
 def upload_file():
   print(f"uploading embadding batch file...")
   response = openai.File.create(
-    file=open(embadding_batch_file, "rb"),
+    file=open(batch_file, "rb"),
     purpose="batch"
   )
 
@@ -68,7 +75,7 @@ def create_batch_task(file_id):
     headers={"Authorization": f"Bearer {openai.api_key}", "Content-Type": "application/json"},
     json={
         "input_file_id": file_id,
-        "endpoint": "/v1/embeddings",
+        "endpoint": "/v1/chat/completions",
         "completion_window": "24h",
     },
   )
