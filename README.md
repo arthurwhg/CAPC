@@ -1,5 +1,5 @@
 # About
-This is a project providing christian assistant and pastor caring service on AI and ML technologies.
+This is a project on christian assistant and pastor caring service on AI and ML technologies.
 It is initiated by a group of students of ML/AI certificate progrom from UC santa Cruze silicon vally extension. 
 
 ## Roadmaps
