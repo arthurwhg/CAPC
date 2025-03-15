@@ -1,4 +1,4 @@
-# question, answer and comment
+# Question, Answer and Comment
 
 ![alt text](diagrams/QAC-classes.png)
 
