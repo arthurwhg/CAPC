@@ -12,7 +12,7 @@ class Embedding():
         self.reduced_embeddings = None 
         self.input_dim = 1536
         self.err = ""
-
+        self.model = None
 
     def ReduceDim(self,model, embedding, n_components= 256):
         self.original_embeddings = embedding
@@ -41,7 +41,7 @@ class Embedding():
             # Reduce dimensions to 256
             pca = PCA(n_components=self.reduced_dim)
             self.reduced_embeddings = pca.fit_transform(self.original_embeddings)
-
+            self.model = pca
             # Check shape before PCA
             print(f"Embedding shape after PCA: {self.reduced_embeddings.shape}")  
 
@@ -51,6 +51,7 @@ class Embedding():
         # Reduce to 256 dimensions
         umap_model = umap.UMAP(n_components=self.reduced_dim)
         self.reduced_embeddings = umap_model.fit_transform(self.original_embeddings)
+        self.model = umap_model
         return(self.reduced_embeddings)
     
     def AutoEncoder(self, embedding):
@@ -72,5 +73,16 @@ class Embedding():
         # Get Reduced Embeddings
         self.reduced_embeddings = encoder.predict(self.original_embeddings)
         print(self.reduced_embeddings.shape)  # Output: (1000, 256)
+        self.model = autoencoder
 
         return self.reduced_embeddings
+    
+    ###
+    # return model for further process such as visualize
+    def getModel(self):
+        return self.model
+    
+    def getErr(self):
+        return self.err
+
+    

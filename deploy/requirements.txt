@@ -128,8 +128,6 @@ sqlparse==0.5.3
 stack-data==0.6.3
 sympy==1.13.1
 tenacity==9.0.0
-tensorboard==2.19.0
-tensorboard-data-server==0.7.2
 tensorflow==2.19.0
 tensorflow-io-gcs-filesystem==0.37.1
 termcolor==2.5.0

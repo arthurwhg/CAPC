@@ -17,7 +17,7 @@ class TopicSerializer(serializers.ModelSerializer):
         }
 
     def __init__(self, *args, **kwargs):
-        super(self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.api_key = "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"
         self.embeddings_model = OpenAIEmbeddings(model="text-embedding-ada-002", api_key=self.api_key)
 
