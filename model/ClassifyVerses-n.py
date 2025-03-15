@@ -25,7 +25,7 @@ modelfile = f"{ROOT_DIR}/data/nm_classifier.h5"
 X = []
 y = []
 
-DIM = 1536  # it is set by setDIM() function 
+DIM = 1536  # it is reset by setDIM() function 
 EPOCHs = 20
 BATCH_SIZE = 32
 
@@ -104,14 +104,22 @@ def build_model(X, y, epochs, batch_size):
   return model, history, X_test, y_test
 
 #print(f"history {history.history}")
-def draw_plot(history, epochs, DIM, method):
+def draw_plot(history, epochs, DIM, method, dir=None):
   plt.figure(figsize=(12,5))
   plt.plot(epochs, history.history["accuracy"], marker="o", linestyle="-", linewidth=1, label="training")
   plt.plot(epochs, history.history["val_accuracy"], marker="o", linestyle="-", linewidth=1, label="validation")
   plt.legend(loc="upper left")
   plt.xlabel("epochs")
   plt.ylabel("accuracy")
-  plt.title(f"accuracy: dimention {DIM} reduced by {method}")
+  if method != "":
+    plt.title(f"accuracy: dimention {DIM} reduced by {method}")
+  else:
+    plt.title(f"accuracy: dimention {DIM}")
+  if dir is not None:
+    figurefile = f"{dir}/Figure_Accuracy_{method}_{DIM}.png"
+    plt.savefig(figurefile, dpi=300) 
+    print(f"saved accuracy chart to {figurefile}")
+
 
   plt.figure(figsize=(12,5))
   plt.plot(epochs, history.history["loss"], marker="o", linestyle="-", linewidth=1, label="training")
@@ -120,7 +128,14 @@ def draw_plot(history, epochs, DIM, method):
   plt.legend(loc="upper left")
   plt.xlabel("epochs")
   plt.ylabel("loss")
-  plt.title(f"loss: dimention {DIM} reduced by {method}")
+  if method != "": 
+    plt.title(f"loss: dimention {DIM} reduced by")
+  else:
+    plt.title(f"loss: dimention {DIM}")
+  if dir is not None:
+    figurefile = f"{dir}/Figure_Loss_{method}_{DIM}.png"
+    plt.savefig(figurefile, dpi=300) 
+    print(f"saved loss chart to {figurefile}")
   plt.show()
   return 
 
@@ -138,8 +153,8 @@ def save_model(model):
   return
 
 #### main steps starts here 
-dim = 16
-reduce_method = 'AutoEncoder'
+dim = 1536
+reduce_method = ''
 X, y = read_data(datafile)
 if dim < X.shape[1]:
   X, y = reduce_dimention(reduce_method, dim, X,y) # it is optional to disable this step to reduce dimention
@@ -148,12 +163,12 @@ DIM = setDIM(X)
 model, history, X_test, y_test = build_model(X,y, EPOCHs, BATCH_SIZE)
 model.summary()
 # generate  the model chart
-plot_model(model, to_file="model_nm_classifier.png", show_shapes=True, show_layer_names=True)
+plot_model(model, to_file=f"{ROOT_DIR}/model/figure/model_nm_classifier.png", show_shapes=True, show_layer_names=True)
 # generate the auto encoder model chart
 if embedding.model is not None:
-  plot_model(embedding.model, to_file="model_nm_autoencoder.png", show_shapes=False, show_layer_names=True)
-embedding.model.summary()
+  plot_model(embedding.model, to_file=f"{ROOT_DIR}/model/figure/model_nm_autoencoder.png", show_shapes=True, show_layer_names=True)
+  embedding.model.summary()
 epochs = range(1, len(history.history["loss"]) + 1)
-draw_plot(history, epochs, DIM, reduce_method)
+draw_plot(history, epochs, DIM, reduce_method, dir=f"{ROOT_DIR}/model/figure")
 evaluate_model(model, X_test, y_test)
-#save_model(model)
+save_model(model)
