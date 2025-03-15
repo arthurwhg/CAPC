@@ -1,5 +1,5 @@
 # Classify Verses 
-Designed a Neural network to categorize each bible verses to 21 topics.
+Designed a Neural network to categorize each bible verses to 21 topics (categories/labels).
 
 In order to classify each verses, each verses is embedded by 1536-D vector by OpenAI embedding model.
 
