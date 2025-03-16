@@ -2,6 +2,11 @@ from django.db import models
 from pgvector.django import VectorField
 from langchain_openai import OpenAIEmbeddings
 from django.utils import timezone
+import os
+from dotenv import load_dotenv
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+load_dotenv(os.path.join(ROOT_DIR, '.env.production'))
 
 class Verse(models.Model):
     id = models.AutoField(primary_key=True)
@@ -15,7 +20,7 @@ class Verse(models.Model):
     verse_number = models.IntegerField(null=True, blank=True)
     verse = models.CharField(max_length=1024, null=True, blank=True)
     cid = models.CharField(max_length=255, null=True, blank=False)
-    topic = models.CharField(max_length=255, null=True)
+    topic = models.IntegerField(null=True, blank=True)
     labeled = models.CharField(max_length=16, null=True, blank=True)
     semantic = models.CharField(null=True, blank=True)
     tokens = models.IntegerField(null=True, blank=True)
@@ -33,7 +38,7 @@ class Verse(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.api_key = "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"
+        self.api_key = os.getenv("OPENAI_API_KEY")
         self.embeddings_model = OpenAIEmbeddings(model="text-embedding-3-small", api_key=self.api_key)
 
     def get_embedding(self,text):
@@ -52,7 +57,13 @@ class Verse(models.Model):
           validated_data['embedding'] = self.get_embedding(validated_data['verse'])
         return super().create(validated_data)
 
-
     def getVerseswithoutTopic(self):
         return Verse.objects.filter(topic__isnull=True)
+    
+    def removeEmbedding(self):
+        self.embedding = None 
+        return self
+    
+    def getVector(self):
+        return self.embedding
     

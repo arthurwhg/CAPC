@@ -1,8 +1,13 @@
 from rest_framework import serializers
 from topics.models import Topic
 from langchain_openai import OpenAIEmbeddings
+import os
+from dotenv import load_dotenv
 #from django.db.models.functions import CosineDistance
 #from django.db.models import F
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+load_dotenv(os.path.join(ROOT_DIR, '.env.production'))
 
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,8 +23,10 @@ class TopicSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.api_key = "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"
-        self.embeddings_model = OpenAIEmbeddings(model="text-embedding-ada-002", api_key=self.api_key)
+        # ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        # load_dotenv(os.path.join(ROOT_DIR, '.env.production'))
+        apikey = os.getenv("OPENAI_API_KEY")
+        self.embeddings_model = OpenAIEmbeddings(model="text-embedding-ada-002", api_key=apikey)
 
     def get_embedding(self,text):
         embedding_vector = self.embeddings_model.embed_query(text)
@@ -39,7 +46,7 @@ class TopicSerializer(serializers.ModelSerializer):
         embedding_str = "[" + ",".join(map(str, query_embedding)) + "]"
 
         topics = Topic.objects.raw(
-            "SELECT id, embedding FROM topics_topic ORDER BY embedding <=> %s LIMIT %s",
+            "SELECT id, embedding FROM topic ORDER BY embedding <=> %s LIMIT %s",
             [embedding_str, str(k)]
         )
 

@@ -15,53 +15,17 @@ import os
 from dotenv import load_dotenv
 
 
-class TopicViewSet(viewsets.ModelViewSet):
+class TopicsViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
     def __init__(self, *args,**kwargs):
         super().__init__(*args, **kwargs)
 
-    @swagger_auto_schema(
-        responses={
-            201: openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'id': openapi.Schema(type=openapi.TYPE_INTEGER, description='Topic ID'),
-                    'topic': openapi.Schema(type=openapi.TYPE_STRING, description='Topic name'),
-                    'embedding': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.Schema(type=openapi.TYPE_NUMBER, format=openapi.FORMAT_FLOAT), description='Topic embedding'),
-                    'book': openapi.Schema(type=openapi.TYPE_STRING, description='Book name'),
-                    'video': openapi.Schema(type=openapi.TYPE_STRING, description='Video URL')
-                }),
-            404: None, 
-            500: None
-        },
-        operation_summary="get topic by id",
-        tags=["topic"],
-    )
-    def retrieve(self, request, pk=None):
-        print(f"retrieve by {pk}")
-       # ...
-        if pk is not None:
-            try:            
-                topic = self.get_queryset().get(pk=int(pk))
-                if topic:
-                    TS = TopicSerializer(topic, many=False)
-                    return Response(TS.data, status=status.HTTP_201_CREATED, content_type='application/json')
-                else:
-                    errorinfo = {"code":"404","detail":f"not found by id {pk}"}
-                    return Response(errorinfo, status=status.HTTP_404_NOT_FOUND, content_type='application/json')                            
-            except Exception as err:
-                errorinfo = {"code":"500","detail":str(err)}
-                return Response(errorinfo, status=status.HTTP_500_INTERNAL_SERVER_ERROR, content_type='application/json')  
-        else:
-            errorinfo = {"code":"400","detail":"please privde an valid id"}
-            return Response(errorinfo, status=status.HTTP_400_BAD_REQUEST, content_type='application/json') 
-
     # [post]
     # create a topic
     @swagger_auto_schema(
-        request_body=TopicSerializer,
+        request_body=TopicSerializer(many=False),
         responses={
             201: openapi.Schema(
                 type=openapi.TYPE_OBJECT,
@@ -76,7 +40,7 @@ class TopicViewSet(viewsets.ModelViewSet):
             500: None
         },
         operation_summary="Create a new topic",
-        tags=["topic"],
+        tags=["topics"],
     )
     def create(self, request):
        # ...
@@ -116,34 +80,65 @@ class TopicViewSet(viewsets.ModelViewSet):
                     items=openapi.Schema(
                         type=openapi.TYPE_NUMBER,
                         format=openapi.FORMAT_FLOAT,
-                        description='Topic vector'
+                        description='Topic embedding'
                     ),
                     description='Topic embedding'),
             404: None, 
             500: None,
         },
-        operation_summary="Get vector of a topic",
-        tags=["topic"],
+        operation_summary="Get embedding of a topic",
+        tags=["topics"],
     )  
-    def get_embedding(self, request, id=None, pk=None):
-        print(f"get_embedding by {id} or pk: {pk}")
-        if id is not None:
-            try:
-                topic = self.get_queryset().get(pk=id)
-                print(topic)
-                if topic is None:
-                    errorinfo = {"code":"404","detail":"Topic not found"}
-                    return Response(None,status=status.HTTP_404_NOT_FOUND)
-                else:
-                    #print(f"return 200ok {topic.embedding[:10]}")
-                    return Response(topic.embedding, status=status.HTTP_200_OK, content_type='application/json')
-            except Topic.DoesNotExist:
-                return Response(status=status.HTTP_404_NOT_FOUND)
-            except Exception as err:
-                errorinfo = {"code":"400","detail":str(err)}
-                return Response(errorinfo, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+    def get_embedding(self, request, id=None):
+        #print(f"get_embedding {id}")
+        pass
+
+    # [get]
+    # Get ids of similar topics by semantic search
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='topic',  # Parameter name
+                in_=openapi.IN_QUERY,  # Location: query parameter
+                type=openapi.TYPE_STRING,           
+                required=True,
+                description="content of a topic"  # A brief description
+            ),
+            openapi.Parameter(
+                name='k',  # Parameter name
+                in_=openapi.IN_QUERY,  # Location: query parameter
+                type=openapi.TYPE_INTEGER,           
+                required=False,
+                default=3,
+                description="number of matched topics to be returned. default is 3"  # A brief description
+            )
+        ],
+        responses={ 
+            200: openapi.Schema (
+                    name='ids',  # Parameter name
+                    type=openapi.TYPE_ARRAY,
+                    items=openapi.Schema(
+                        type=openapi.TYPE_INTEGER,
+                        description='Topic IDs'
+                    ),
+                    description='Topic IDs'),
+            400: openapi.Response(description="Bad Request"),
+            404: openapi.Response(description="Not Found"), 
+            500: openapi.Response(description="Internal Server Error"),
+        },
+        operation_summary="get a topic list similar to the given content",
+        tags=["topics"],
+    )  
+    @action(detail=False, methods=['get'], url_path='similar')
+    def get_similary_topics(self, request):
+        topic_content = request.query_params.get("topic", None)
+        k = request.query_params.get("k", 3)
+        TS = TopicSerializer()
+        if topic_content is not None:
+            topicIds = TS.get_similar_topics(topic_content, k)
+            if len(topicIds) > 0:
+                return Response(topicIds, status=status.HTTP_200_OK, content_type='application/json')
+            else:
+                return Response({"error": "No similar topics found"}, status=status.HTTP_404_NOT_FOUND, content_type='application/json')
         else:
-            errorinfo = {"code":"400","detail":"Invalid Topic ID provided"}
-            return Response(errorinfo, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
-
-
+            return Response({"error": "Topic content should be provided"}, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
