@@ -1,3 +1,9 @@
+###
+# This utility is designed to update the topic of verses in the database automatedly using the model trained
+#
+# v1.0
+#
+###
 import django
 from tensorflow.keras.models import load_model
 import os,sys
@@ -30,11 +36,10 @@ model.summary()
 
 # Get all verses vector from database where no topic marked
 verses = Verse()
-#verse_list = verses.getVerseswithoutTopic().all()
-#verse_list = verses.objects.all()
 verse_list = Verse.objects.filter(topic__isnull=True).only('id', 'cid')
 print(f"total {verse_list.count()} to be updated!")
 
+# get vectors of each verses
 X = []
 Verses = []
 print("Adding vectors to the list ...")

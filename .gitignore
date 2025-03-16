@@ -6,8 +6,9 @@ db/data/
 .git/
 ipynd/
 */migrations/
-*.mp3
 /data/tmp/
+/data/audio/
+*.mp3
 db/data/pg_hba.conf
 db/data/pg_ident.conf
 db/data/PG_VERSION
