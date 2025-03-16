@@ -17,8 +17,9 @@ Configuration of original neural netowrk model
 ![alt text](figure/model_nm_classifier.png)
 
 ### Overfitting by 1536-D input
-Use dimention (1536-D vector) as input features, make the model overfitting shown by the following two figures. 
-![alt text](figure/Figure_1536_accuracy.png) ![alt text](figure/Figure_1536_loss.png)
+To use all vector dimention (1536-D vector) as input features, makes the model overfitting shown by the following two figures. 
+![alt text](figure/Figure_1536_accuracy.png)
+![alt text](figure/Figure_1536_loss.png)
 
 Considered reduce the dimention of embedding. Got some improvement (reduced dimention to 16) as following
 ![alt text](figure/Figure_accuracy_best_16-d.png)
