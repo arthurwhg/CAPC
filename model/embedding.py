@@ -3,6 +3,7 @@ import umap
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers, Model
+from tensorflow.keras.optimizers import Adam
 
 class Embedding():
 
@@ -58,17 +59,19 @@ class Embedding():
         # Define Autoencoder Model
         input_layer = layers.Input(shape=(self.input_dim,))
         encoded = layers.Dense(self.reduced_dim, activation='relu')(input_layer)
-        encoded = layers.Dense(self.reduced_dim, activation='relu')(encoded)
+        encoded = layers.Dense(self.reduced_dim-120, activation='relu')(encoded)
+        encoded = layers.Dense(self.reduced_dim-240, activation='relu')(encoded)
 
         decoded = layers.Dense(self.input_dim * 2, activation='relu')(encoded)
+        decoded = layers.Dense(round(self.input_dim * 1.1), activation='relu')(encoded)
         decoded = layers.Dense(self.input_dim, activation='sigmoid')(decoded)
 
         autoencoder = Model(input_layer, decoded)
         encoder = Model(input_layer, encoded)  # Use encoder to get reduced embeddings
 
         # Compile & Train
-        autoencoder.compile(optimizer='adam', loss='mse', metrics=['accuracy'])
-        autoencoder.fit(self.original_embeddings, self.original_embeddings, epochs=20, batch_size=32)
+        autoencoder.compile(optimizer=Adam, loss='mse', metrics=['accuracy'])
+        autoencoder.fit(self.original_embeddings, self.original_embeddings, epochs=40, batch_size=32)
 
         # Get Reduced Embeddings
         self.reduced_embeddings = encoder.predict(self.original_embeddings)

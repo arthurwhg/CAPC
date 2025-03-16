@@ -54,5 +54,5 @@ class Verse(models.Model):
 
 
     def getVerseswithoutTopic(self):
-        return Verse.objects.filter(topic__isnull=True).all()
+        return Verse.objects.filter(topic__isnull=True)
     

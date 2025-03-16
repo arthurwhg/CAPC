@@ -9,6 +9,7 @@ import tensorflow as tf
 from tensorflow.keras import layers
 from tensorflow import keras
 from tensorflow.keras.utils import plot_model
+from tensorflow.keras.optimizers import Adam, SGD
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
@@ -25,9 +26,8 @@ modelfile = f"{ROOT_DIR}/data/nm_classifier.h5"
 X = []
 y = []
 
-DIM = 1536  # it is reset by setDIM() function 
-EPOCHs = 20
-BATCH_SIZE = 32
+EPOCHs = 60
+BATCH_SIZE = 64
 
 embedding = Embedding()
 
@@ -90,14 +90,16 @@ def build_model(X, y, epochs, batch_size):
       layers.Input(shape=(DIM,)),  # Input layer (1536-dimensional vectors)
       layers.Dense(DIM, activation="relu"),  # Hidden layer 1
       layers.Dropout(0.6), # aovid overfitting
-      layers.Dense(128, activation="relu"),  # Hidden layer 1
+      layers.Dense(512, activation="relu"),  # Hidden layer 2
       layers.Dropout(0.3), # aovid overfitting
-      layers.Dense(64, activation="relu"),  # Hidden layer 1
-      layers.Dense(21, activation="softmax")  # Output layer (10 classes)
+      layers.Dense(256, activation="relu"),  # Hidden layer 3
+      layers.Dense(128, activation="relu"),  # Hidden layer 4
+      layers.Dense(64, activation="relu"),  # Hidden layer 5
+      layers.Dense(21, activation="softmax")  # Output layer (21 classes)
   ])
 
   # Compile the model
-  model.compile(optimizer="adam", loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+  model.compile(optimizer=Adam(learning_rate=0.0005), loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 
   # Train for 20 epochs with a batch size of 32
   history = model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=epochs, batch_size=batch_size)
@@ -129,7 +131,7 @@ def draw_plot(history, epochs, DIM, method, dir=None):
   plt.xlabel("epochs")
   plt.ylabel("loss")
   if method != "": 
-    plt.title(f"loss: dimention {DIM} reduced by")
+    plt.title(f"loss: dimention {DIM} reduced by {method}")
   else:
     plt.title(f"loss: dimention {DIM}")
   if dir is not None:
@@ -163,12 +165,16 @@ DIM = setDIM(X)
 model, history, X_test, y_test = build_model(X,y, EPOCHs, BATCH_SIZE)
 model.summary()
 # generate  the model chart
-plot_model(model, to_file=f"{ROOT_DIR}/model/figure/model_nm_classifier.png", show_shapes=True, show_layer_names=True)
+plot_model(model, to_file=f"{ROOT_DIR}/model/figure/model_nm_classifier.png", show_shapes=True, rankdir="TB", show_layer_names=True)
 # generate the auto encoder model chart
 if embedding.model is not None:
-  plot_model(embedding.model, to_file=f"{ROOT_DIR}/model/figure/model_nm_autoencoder.png", show_shapes=True, show_layer_names=True)
+  plot_model(embedding.model, to_file=f"{ROOT_DIR}/model/figure/model_nm_autoencoder.png", show_shapes=True,rankdir="TB", show_layer_names=True)
   embedding.model.summary()
 epochs = range(1, len(history.history["loss"]) + 1)
 draw_plot(history, epochs, DIM, reduce_method, dir=f"{ROOT_DIR}/model/figure")
-evaluate_model(model, X_test, y_test)
+y_red = model.predict(X_test)
+print(y_red.shape)
+y_pred_class = np.argmax(y_red, axis=1)
+print(y_pred_class)
+evaluate_model(model,X_test, y_test)
 save_model(model)

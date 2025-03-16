@@ -18,8 +18,7 @@ Configuration of original neural netowrk model
 
 ### Overfitting by 1536-D input
 Use dimention (1536-D vector) as input features, make the model overfitting shown by the following two figures. 
-![alt text](figure/Figure_1536_accuracy.png)
-![alt text](figure/Figure_1536_loss.png)
+![alt text](figure/Figure_1536_accuracy.png) ![alt text](figure/Figure_1536_loss.png)
 
 Considered reduce the dimention of embedding. Got some improvement (reduced dimention to 16) as following
 ![alt text](figure/Figure_accuracy_best_16-d.png)
@@ -33,7 +32,7 @@ created another AutoEncoder Neural network model to reduce dimention. model deta
 | **dense_1 (Dense)** | (None, 16) | 272 |
 | **dense_2 (Dense)** | (None, 3072) | 52,224 |
 | **dense_3 (Dense)** | (None, 1536) | 4,720,128 |
-
+![alt text](figure/model_nm_autoencoder.png)
 # Other dimention reduction agrithm 
 ## PCA model
 ![alt text](figure/Figure_PCA_Accuracy.png)
