@@ -33,7 +33,7 @@ created another AutoEncoder Neural network model to reduce dimention. model deta
 | **dense_1 (Dense)** | (None, 16) | 272 |
 | **dense_2 (Dense)** | (None, 3072) | 52,224 |
 | **dense_3 (Dense)** | (None, 1536) | 4,720,128 |
-
+![alt text](figure/model_nm_autoencoder.png)
 # Other dimention reduction agrithm 
 ## PCA model
 ![alt text](figure/Figure_PCA_Accuracy.png)
