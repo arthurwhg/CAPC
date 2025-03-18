@@ -6,6 +6,7 @@ from rest_framework import viewsets, status
 from rest_framework.renderers import JSONRenderer
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -22,6 +23,39 @@ class TopicsViewSet(viewsets.ModelViewSet):
     def __init__(self, *args,**kwargs):
         super().__init__(*args, **kwargs)
 
+    @swagger_auto_schema(
+        operation_description="Retrieve a set of verses by a list of IDs, vector is not included",
+        manual_parameters=[
+            openapi.Parameter(
+                'ids',
+                in_=openapi.IN_QUERY,
+                description="Comma-separated list of verse IDs",
+                type=openapi.TYPE_ARRAY,
+                    items=openapi.Items(type=openapi.TYPE_INTEGER),
+                    required=True
+            ),
+        ],
+        responses={200: TopicSerializer(many=True)},
+        operation_summary="Get Topics by IDs",
+        tags=["Topics"]
+    )
+    @action(detail=False, methods=['get'], url_name='byids')
+    def get_topics_by_ids(self, request):
+        print(f"got request with {request.query_params.get('ids', None)}")
+        tids = request.query_params.get('ids', None)
+        if tids is None:
+            return Response({"error": "ids should be provided"}, status=status.HTTP_400_BAD_REQUEST, content_type='application/json')
+
+        id_list = [int(i) for i in tids.split(',')]
+
+        topics = list(Topic.objects.filter(id__in=id_list).all())
+        t_list = []
+        for t in topics:
+            t_list.append(t.removeEmbedding())
+        serializer = TopicSerializer(t_list, many=True)
+        print(f"found {len(serializer.data)} topics")
+        return Response(serializer.data,status=status.HTTP_200_OK, content_type='application/json')
+    
     # [post]
     # create a topic
     @swagger_auto_schema(
@@ -40,7 +74,7 @@ class TopicsViewSet(viewsets.ModelViewSet):
             500: None
         },
         operation_summary="Create a new topic",
-        tags=["topics"],
+        tags=["Topics"],
     )
     def create(self, request):
        # ...
@@ -87,7 +121,7 @@ class TopicsViewSet(viewsets.ModelViewSet):
             500: None,
         },
         operation_summary="Get embedding of a topic",
-        tags=["topics"],
+        tags=["Topics"],
     )  
     def get_embedding(self, request, id=None):
         #print(f"get_embedding {id}")
@@ -127,7 +161,7 @@ class TopicsViewSet(viewsets.ModelViewSet):
             500: openapi.Response(description="Internal Server Error"),
         },
         operation_summary="get a topic list similar to the given content",
-        tags=["topics"],
+        tags=["Topics"],
     )  
     @action(detail=False, methods=['get'], url_path='similar')
     def get_similary_topics(self, request):

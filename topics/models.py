@@ -24,3 +24,7 @@ class Topic(models.Model):
     def generate_embedding(self, text):
         # Placeholder function: Replace with actual embedding logic
         return [0.0] * 1536  # Example embedding of dimension 1536
+    
+    def removeEmbedding(self):
+        self.embedding = []
+        return self

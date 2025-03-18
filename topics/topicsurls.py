@@ -4,10 +4,11 @@ from .topicsViewSet import TopicsViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'', TopicsViewSet,basename='topics')
+router.register(r'', TopicsViewSet,basename='Topics')
 
 urlpatterns = [
-    #path('similar', TopicsViewSet.as_view(actions=({'get': 'get_similar_topics'}), name='Topic_similar')),
-    path('', include(router.urls)),
+    path('similar', TopicsViewSet.as_view(actions=({'get': 'get_similar_topics'}), name='Topics')),
+    path('byids/', TopicsViewSet.as_view(actions=({'get': 'get_topics_by_ids'}), name='Topics')),
+    #path('', include(router.urls)),
 ]
 

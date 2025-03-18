@@ -24,6 +24,7 @@ import api.urls as api_urls
 import topics.topicurls as topic_urls
 import topics.topicsurls as topics_urls
 import verses.urls as verses_urls
+import topics.topicAnswerurls as TopicAnswerurls
 
 swagger_info = openapi.Info(
     title="llm API Documentation",
@@ -43,6 +44,7 @@ urlpatterns = [
     path("llm/api/v1/topic/", include(topic_urls)), # include topic urls
     path("llm/api/v1/topics/", include(topics_urls)), # include topics urls
     path("llm/api/v1/verses/", include(verses_urls)), # include
+    path("llm/api/v1/topicanswer/", include(TopicAnswerurls)), # include
     path("admin/", admin.site.urls),
     path('swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
