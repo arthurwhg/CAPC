@@ -61,7 +61,7 @@ class Verse(models.Model):
         return Verse.objects.filter(topic__isnull=True)
     
     def removeEmbedding(self):
-        self.embedding = None 
+        self.embedding = [] 
         return self
     
     def getVector(self):
