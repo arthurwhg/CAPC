@@ -1,6 +1,6 @@
 # About
-This is a project on christian assistant and pastor caring service on AI and ML technologies.
-It is initiated by a group of students of ML/AI certificate progrom from UC santa Cruze silicon vally extension. 
+This is a project for faith based services on AI and ML technologies.
+It is initiated by m4christ.net group. 
 
 ## Roadmaps
 ### version 1
